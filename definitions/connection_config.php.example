@@ -1,0 +1,10 @@
+<?php
+    /**
+     *  Для настройки подключения используется connection_config.php
+     /**
+    define('CONNECTION_CONFIG', [
+        'host' => 'localhost',
+        'user' => 'user',
+        'password' => 'password',
+        'database' => 'database'
+    ]);
