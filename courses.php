@@ -23,7 +23,6 @@
 
     if (empty($_GET['course']) && empty($_GET['lesson'])) {
 
-
         $info = get_lessons_info($connection, $course);
 
         $result = json_encode([
@@ -33,8 +32,7 @@
     }
 
 
-    if ($http_origin == "http://localhost:3000" || $http_origin == "https://greycat20142017.github.io/bormo")
-    {
+    if ($http_origin === 'http://localhost:3000' || $http_origin === 'https://greycat20142017.github.io/bormo') {
         header("Access-Control-Allow-Origin: $http_origin");
     }
     header('Content-type: application/json; charset=UTF-8');
