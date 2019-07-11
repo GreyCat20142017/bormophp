@@ -82,3 +82,25 @@
         $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
         return (!$data || was_error($data)) ? [] : $data;
     }
+
+    /**
+     * Возвращает массив с вариантами перевода по части строки или точному совпадению
+     * @param $connection
+     * @param $search_text
+     * @return array|null
+     */
+    function get_search_result($connection, $search_text, $exact = 0) {
+        $search_text = trim(mysqli_real_escape_string($connection, $search_text));
+        $word = empty($exact) ? '%' . $search_text . '%' : $search_text;
+        $first = mb_substr($search_text, 0, 1, 'UTF8');
+        $need_russian = (preg_match("/^[A-Za-z]/", $first)) ? 1 : 0;
+
+        $sql = 'SELECT DISTINCT
+                   CASE WHEN ' . $need_russian . ' = 1 THEN  TRIM(russian) ELSE  trim(english) END AS translate,
+                   CASE WHEN ' . $need_russian . ' = 1 THEN  TRIM(english) ELSE  trim(russian) END AS word,
+                   CASE WHEN TRIM(english) = "' . $search_text . '" OR TRIM(russian) = "' . $search_text . '" THEN 0 ELSE 1 END AS exact_order
+                FROM words WHERE english LIKE "' . $word . '" OR russian LIKE "' . $word . '"  
+                ORDER BY exact_order, word, translate;';
+        $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
+        return (!$data || was_error($data)) ? [] : $data;
+    }

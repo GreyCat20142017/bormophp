@@ -11,7 +11,8 @@
         $course = trim(strip_tags($_GET['course']));
         $lesson = intval(strip_tags($_GET['lesson']));
         $offset = ($lesson - 1) * PAGINATION_STEP;
-        $content = get_lesson_content($connection, $course, PAGINATION_STEP, $offset);
+        $step = empty($_GET['offline']) ? PAGINATION_STEP : PAGINATION_STEP * LESSONS_FOR_OFFLINE;
+        $content = get_lesson_content($connection, $course, $step, $offset);
 
         $result = json_encode([
             'status' => STATUS_OK,
