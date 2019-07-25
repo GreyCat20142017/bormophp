@@ -6,25 +6,24 @@
 
     $result = json_encode([status => !STATUS_OK, JSON_UNESCAPED_UNICODE]);
 
-    if (!empty($_GET['course']) && !empty($_GET['lesson'])) {
+    if (!empty($_GET['lesson'])) {
 
-        $course = trim(strip_tags($_GET['course']));
         $lesson = intval(strip_tags($_GET['lesson']));
-        $offset = ($lesson - 1) * PAGINATION_STEP;
-        $step = empty($_GET['offline']) ? PAGINATION_STEP : PAGINATION_STEP * LESSONS_FOR_OFFLINE;
-        $content = get_lesson_content($connection, $course, $step, $offset);
+        $offset = ($lesson - 1) * PHRASES_PAGINATION_STEP;
+        $step = empty($_GET['offline']) ? PHRASES_PAGINATION_STEP : PHRASES_PAGINATION_STEP * LESSONS_FOR_OFFLINE;
+        $content = get_phrases_content($connection, $step, $offset);
 
         $result = json_encode([
             'status' => STATUS_OK,
-            'course' => $course,
+            'course' => 'PHRASES',
             'lesson' => $lesson,
             'content' => $content
         ], JSON_UNESCAPED_UNICODE);
     }
 
-    if (empty($_GET['course']) && empty($_GET['lesson'])) {
+    if (empty($_GET['lesson'])) {
 
-        $info = get_lessons_info($connection, $course);
+        $info = get_phrases_info($connection);
 
         $result = json_encode([
             'status' => STATUS_OK,

@@ -78,7 +78,7 @@
      */
     function get_lessons_info($connection, $course) {
         $course = mysqli_real_escape_string($connection, $course);
-        $sql = 'SELECT course AS name, CEIL(SUM(1)/20) AS lastlesson FROM words GROUP BY course;';
+        $sql = 'SELECT course AS name, CEIL(SUM(1)/ ' . PAGINATION_STEP . ') AS lastlesson FROM words GROUP BY course;';
         $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
         return (!$data || was_error($data)) ? [] : $data;
     }
@@ -101,6 +101,31 @@
                    CASE WHEN TRIM(english) = "' . $search_text . '" OR TRIM(russian) = "' . $search_text . '" THEN 0 ELSE 1 END AS exact_order
                 FROM words WHERE english LIKE "' . $word . '" OR russian LIKE "' . $word . '"  
                 ORDER BY exact_order, word, translate;';
+        $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
+        return (!$data || was_error($data)) ? [] : $data;
+    }
+
+    /**
+     * Функция возвращает данные о количестве уроков в разделе Phrases
+     * @param $connection
+     * @return array|null
+     */
+    function get_phrases_info($connection) {
+        $sql = 'SELECT "PHRASES" AS name, CEIL(SUM(1)/' . PHRASES_PAGINATION_STEP . ') AS lastlesson FROM phrases';
+        $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
+        return (!$data || was_error($data)) ? [] : $data;
+    }
+
+    /**
+     * Функция возвращает массив с данными урока из раздела Phrases, либо пустой массив
+     * @param $connection
+     * @param $course
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    function get_phrases_content($connection,  $limit, $offset) {
+        $sql = 'SELECT TRIM(english) AS english, TRIM(russian) AS russian FROM phrases ORDER BY section_id LIMIT ' . $limit . ' OFFSET ' . $offset . ';';
         $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
         return (!$data || was_error($data)) ? [] : $data;
     }
