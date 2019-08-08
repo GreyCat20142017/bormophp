@@ -124,8 +124,30 @@
      * @param $offset
      * @return array
      */
-    function get_phrases_content($connection,  $limit, $offset) {
+    function get_phrases_content($connection, $limit, $offset) {
         $sql = 'SELECT TRIM(english) AS english, TRIM(russian) AS russian FROM phrases ORDER BY section_id LIMIT ' . $limit . ' OFFSET ' . $offset . ';';
         $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', false);
         return (!$data || was_error($data)) ? [] : $data;
+    }
+
+
+    /**
+     * Функция для проверки подключения. Возвращает данные о количестве записей, либо слово Error
+     * @param $connection
+     * @param $course
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
+    function get_test_result($connection) {
+        $sql = 'SELECT SUM(words_count) AS words_count, SUM(phrases_count) AS phrases_count
+                FROM (SELECT COUNT(*) AS words_count, 0 AS phrases_count
+                      FROM words
+                      UNION
+                      SELECT 0, COUNT(*) AS phrases_count
+                      FROM phrases) AS tmp;';
+        $data = get_data_from_db($connection, $sql, 'Невозможно получить данные', true);
+        return (!$data || was_error($data)) ?
+            'Error' :
+            'OK (слов: ' . $data['words_count'] . ', фраз: ' . $data['phrases_count'] . ')';
     }

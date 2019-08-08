@@ -21,8 +21,7 @@
         ], JSON_UNESCAPED_UNICODE);
     }
 
-
-    if ($http_origin === 'http://localhost:3000' || $http_origin === 'https://greycat20142017.github.io/bormo') {
+    if ($http_origin === LOCALHOST_URL || $http_origin === GITHUB_URL) {
         header("Access-Control-Allow-Origin: $http_origin");
     }
     header('Content-type: application/json; charset=UTF-8');

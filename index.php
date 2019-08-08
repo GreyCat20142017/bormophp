@@ -2,4 +2,10 @@
 
     require_once('init.php');
 
-    echo 'Данные для бормотунчика... <a href="http://bormophp.local/courses.php?course=abc&lesson=10"> Сюда </a>';
+    echo "<p>Данные для бормотунчика</p>
+    <ul>
+        <li><a href='/courses.php?course=book&lesson=10'> Пример данных (слова) </a></li>
+        <li><a href='/phrases.php?lesson=1'> Пример данных (фразы)</a></li>
+        <li><a href='/search.php?word=book&exact=0'> Пример результатов поиска</a></li>
+        <li><a href='/test.php'>Статистика</a></li>
+    </ul>";
